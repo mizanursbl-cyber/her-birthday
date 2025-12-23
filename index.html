@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>HBD Sumaiya</title>
@@ -18,33 +18,32 @@
 <script src="file/love.js"></script>
 
 <style>
-/* 💬 Auto resize text */
+/* ✅ text one line + auto resize */
 .say {
     white-space: nowrap;
     display: inline-block;
     font-size: clamp(16px, 4vw, 26px);
 }
 
-/* 📱 Mobile center layout */
-@media (max-width: 768px) {
-    #wrap {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    #canvas {
-        width: 100% !important;
-        height: auto !important;
-    }
-    #text {
-        text-align: center;
-    }
+/* ✅ text bampase faka jaygay */
+#text {
+    position: relative;
+    left: -120px;        /* 👈 main fix */
+    z-index: 10;
 }
 
-/* 💖 Glow for blooms */
-canvas {
-    filter: drop-shadow(0 0 8px rgba(255, 0, 90, 0.6));
+/* canvas stays behind */
+#canvas {
+    position: relative;
+    z-index: 1;
+}
+
+/* mobile safe */
+@media (max-width: 768px) {
+    #text {
+        left: 0;
+        text-align: center;
+    }
 }
 </style>
 
@@ -87,7 +86,7 @@ function playAudio() {
 </div>
 
 <script>
-/* 💞 Draw name inside heart */
+/* 💞 draw name inside heart */
 function drawName(canvas) {
     var ctx = canvas.getContext("2d");
     ctx.save();
@@ -96,11 +95,16 @@ function drawName(canvas) {
     ctx.textAlign = "center";
     ctx.shadowColor = "rgba(255, 100, 160, 0.9)";
     ctx.shadowBlur = 18;
-    ctx.fillText("Sumaiya", canvas.width / 2, canvas.height / 2 + 40);
+
+    ctx.fillText(
+        "Sumaiya",
+        canvas.width / 2 - 60,   // 👈 adjusted to center of heart
+        canvas.height / 2 + 40
+    );
     ctx.restore();
 }
 
-(function () {
+(function() {
     var canvas = $('#canvas');
     if (!canvas[0].getContext) return;
 
@@ -136,7 +140,7 @@ function drawName(canvas) {
     var foot = tree.footer;
     var hold = 1;
 
-    canvas.click(function (e) {
+    canvas.click(function(e) {
         playAudio();
         var offset = canvas.offset();
         if (seed.hover(e.pageX - offset.left, e.pageY - offset.top)) {
@@ -169,7 +173,7 @@ function drawName(canvas) {
     var flowAnimate = eval(Jscex.compile("async", function () {
         while (tree.canFlower()) {
             tree.flower(6);
-            drawName(canvas[0]);   // 💞 name glow
+            drawName(canvas[0]);
             $await(Jscex.Async.sleep(30));
         }
     }));
